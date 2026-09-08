@@ -13,6 +13,6 @@ class Katas extends Model
         'kruna_ami',
         'kruna_mider', 
         'kruna_kasar',
-        'bahasa_Indonesia'
+        'bahasa_indonesia'
     ];
 }
