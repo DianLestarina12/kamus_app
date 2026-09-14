@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">   
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
@@ -37,6 +38,7 @@
         font-family: 'Libre Baskerville', serif;
         font-size: 18px;
         font-weight: bold;
+        color: #6E491C;
     }
 </style>
 <body style="justify-content: center; align-items: center;">
@@ -54,7 +56,7 @@ KRUNA BASA BALI</a>
             <a class="nav-link" href="#">Kuis Evaluasi</a>
             <a class="nav-link" href="#">Tentang</a>
             <span class="nav-link disabled"> | </span>
-            <a class="nav-link disabled" aria-disabled="true"> <u>Admin</u> </a>
+            <a class="nav-link" href="#"> <u>Admin</u></a>
             <a class="nav-link btn spc-btn btn-success">Masuk</a>
         </div>
         </div>
@@ -62,6 +64,8 @@ KRUNA BASA BALI</a>
     </nav>
     <div class="container">
         @yield('content')
+        @yield('modal')
     </div>
 </body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 </html>

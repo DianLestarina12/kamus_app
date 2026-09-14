@@ -1,13 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
+@extends('template')
+@section('content')
     <div class="">
-        <a class="btn" href="{{ route('soal.create') }}"> <div class="btn">Add new soal</div></a>
+        <a class="btn" href="{{ route('soal.create') }}"> <div class="btn"> Add New Soal</div></a>
         <table class="table">
             <thead>
                 <tr>
@@ -25,6 +19,6 @@
                     </tr>
                 @endforeach
             </tbody>
+        </table>
     </div>
-</body>
-</html>
+@endsection
