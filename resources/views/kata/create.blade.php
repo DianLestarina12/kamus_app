@@ -11,4 +11,4 @@
         <input type="text" name="bahasa_indonesia" placeholder="Masukkan Bahasa Indonesia">
         <button type="submit">Submit</button> 
     </form>
-@section
+@endsection

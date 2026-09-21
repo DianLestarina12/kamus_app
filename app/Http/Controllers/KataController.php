@@ -8,12 +8,36 @@ use Illuminate\Support\Facades\DB;
 
 class KataController extends Controller
 {
-    public function index()
-    {
-        $katas = Katas::latest()->get();
 
-        return view('kata.index', compact('katas'));
+    protected const SORTABLE_COLUMNS = [
+        'kruna_andap', 'kruna_asi', 'kruna_aso', 'kruna_ami', 'kruna_mider', 'kruna_kasar', 'bahasa_indonesia',
+    ];
+
+    public function index(Request $request)
+    {
+        $search = trim((string) $request->query('q', ''));
+        $sort = in_array($request->query('sort'), self::SORTABLE_COLUMNS, true)
+            ? $request->query('sort')
+            : null;
+        $direction = $request->query('direction') === 'desc' ? 'desc' : 'asc';
+
+        $query = Katas::query();
+
+        if ($search !== '') {
+            $query->where(function ($q) use ($search) {
+                foreach (self::SORTABLE_COLUMNS as $column) {
+                    $q->orWhere($column, 'like', '%' . $search . '%');
+                }
+            });
+        }
+
+        $sort ? $query->orderBy($sort, $direction) : $query->latest();
+
+        $katas = $query->get();
+
+        return view('kata.index', compact('katas', 'search', 'sort', 'direction'));
     }
+        
 
     public function create()
     {
@@ -63,7 +87,7 @@ class KataController extends Controller
         return redirect()->route('kata.index')
                         ->with('success','Kata updated successfully');
     } 
-    
+
     public function destroy($id)
     {
         $kata = Katas::findOrFail($id);
@@ -79,71 +103,71 @@ class KataController extends Controller
     }
 
 
-public function import(Request $request)
-{
-    $request->validate([
-        'file' => 'required|file|mimes:csv,txt',
-    ]);
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:csv,txt',
+        ]);
 
-    $handle = fopen($request->file('file')->getRealPath(), 'r');
-    fgetcsv($handle); // skip header row
+        $handle = fopen($request->file('file')->getRealPath(), 'r');
+        fgetcsv($handle); // skip header row
 
-    $imported = 0;
-    $skipped = 0;
-    $rowsToInsert = [];
-    $chunkSize = 1000; // Process 1,000 rows per batch
+        $imported = 0;
+        $skipped = 0;
+        $rowsToInsert = [];
+        $chunkSize = 1000; // Process 1,000 rows per batch
 
-    while (($row = fgetcsv($handle)) !== false) {
-        $kruna_andap = trim($row[0] ?? '');
-        $bahasa_indonesia = trim($row[6] ?? '');
+        while (($row = fgetcsv($handle)) !== false) {
+            $kruna_andap = trim($row[0] ?? '');
+            $bahasa_indonesia = trim($row[6] ?? '');
 
-        // Count as skipped if critical fields are empty
-        if ($kruna_andap === '' || $bahasa_indonesia === '') {
-            $skipped++;
-            continue;
+            // Count as skipped if critical fields are empty
+            if ($kruna_andap === '' || $bahasa_indonesia === '') {
+                $skipped++;
+                continue;
+            }
+
+            $kruna_andap = trim($row[0] ?? '');
+            $kruna_asi = trim($row[1] ?? '');
+            $kruna_aso = trim($row[2] ?? '');
+            $kruna_ami = trim($row[3] ?? '');
+            $kruna_mider = trim($row[4] ?? '');
+            $kruna_kasar = trim($row[5] ?? '');
+            $bahasa_indonesia = trim($row[6] ?? '');
+
+            $rowsToInsert[] = [
+                'kruna_andap' => $kruna_andap !== '' ? $kruna_andap : null,
+                'kruna_asi' => $kruna_asi !== '' ? $kruna_asi : null, 
+                'kruna_aso' => $kruna_aso !== '' ? $kruna_aso : null,
+                'kruna_ami' => $kruna_ami !== '' ? $kruna_ami : null,
+                'kruna_mider' => $kruna_mider !== '' ? $kruna_mider : null,
+                'kruna_kasar' => $kruna_kasar !== '' ? $kruna_kasar : null,
+                'bahasa_indonesia' => $bahasa_indonesia,
+            ];
+
+            // Process in chunks to keep memory usage low
+            if (count($rowsToInsert) >= $chunkSize) {
+                // insertOrIgnore skips duplicates natively at the database level
+                $insertedInBatch = Katas::insertOrIgnore($rowsToInsert);
+                
+                $imported += $insertedInBatch;
+                $skipped += (count($rowsToInsert) - $insertedInBatch);
+                
+                $rowsToInsert = []; // Reset batch array
+            }
         }
 
-        $kruna_andap = trim($row[0] ?? '');
-        $kruna_asi = trim($row[1] ?? '');
-        $kruna_aso = trim($row[2] ?? '');
-        $kruna_ami = trim($row[3] ?? '');
-        $kruna_mider = trim($row[4] ?? '');
-        $kruna_kasar = trim($row[5] ?? '');
-        $bahasa_indonesia = trim($row[6] ?? '');
-
-        $rowsToInsert[] = [
-            'kruna_andap' => $kruna_andap !== '' ? $kruna_andap : null,
-            'kruna_asi' => $kruna_asi !== '' ? $kruna_asi : null, 
-            'kruna_aso' => $kruna_aso !== '' ? $kruna_aso : null,
-            'kruna_ami' => $kruna_ami !== '' ? $kruna_ami : null,
-            'kruna_mider' => $kruna_mider !== '' ? $kruna_mider : null,
-            'kruna_kasar' => $kruna_kasar !== '' ? $kruna_kasar : null,
-            'bahasa_indonesia' => $bahasa_indonesia,
-        ];
-
-        // Process in chunks to keep memory usage low
-        if (count($rowsToInsert) >= $chunkSize) {
-            // insertOrIgnore skips duplicates natively at the database level
+        // Process any remaining rows left in the array
+        if (count($rowsToInsert) > 0) {
             $insertedInBatch = Katas::insertOrIgnore($rowsToInsert);
-            
             $imported += $insertedInBatch;
             $skipped += (count($rowsToInsert) - $insertedInBatch);
-            
-            $rowsToInsert = []; // Reset batch array
         }
+
+        fclose($handle);
+
+        return redirect()->route('kata.index')
+            ->with('success', "Import selesai: {$imported} kata ditambahkan, {$skipped} dilewati (duplikat/kosong).");
     }
-
-    // Process any remaining rows left in the array
-    if (count($rowsToInsert) > 0) {
-        $insertedInBatch = Katas::insertOrIgnore($rowsToInsert);
-        $imported += $insertedInBatch;
-        $skipped += (count($rowsToInsert) - $insertedInBatch);
-    }
-
-    fclose($handle);
-
-    return redirect()->route('kata.index')
-        ->with('success', "Import selesai: {$imported} kata ditambahkan, {$skipped} dilewati (duplikat/kosong).");
-}
 
 }

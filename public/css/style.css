@@ -1,0 +1,80 @@
+:root {
+    --coklat: #6b4423;
+    --coklat-tua: #47290f;
+    --coklat-muda: #a9784f;
+    --oranye: #ff7a1a;
+    --oranye-tua: #e85d04;
+    --putih: #ffffff;
+    --krem: #fff8f1;
+    --teks: #3b2a1f;
+}
+
+body {
+    /* background-color: var(--krem); */
+    color: var(--teks);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main {
+    flex: 1;
+}
+
+.navbar-kamus {
+    background-color: var(--putih);
+    border-bottom: 3px solid var(--oranye);
+}
+
+.navbar-kamus .navbar-brand {
+    color: var(--coklat);
+    font-weight: 700;
+}
+
+.navbar-kamus .nav-link {
+    color: var(--coklat-tua);
+    font-weight: 500;
+}
+
+.navbar-kamus .nav-link:hover,
+.navbar-kamus .nav-link.active {
+    color: var(--oranye-tua);
+}
+
+.btn-login {
+    background-color: var(--coklat);
+    border-color: var(--coklat);
+    color: var(--putih);
+    font-weight: 600;
+}
+
+.btn-login:hover {
+    background-color: var(--coklat-tua);
+    border-color: var(--coklat-tua);
+    color: var(--putih);
+}
+
+.btn-oranye {
+    background-color: var(--oranye);
+    border-color: var(--oranye);
+    color: var(--putih);
+    font-weight: 600;
+}
+
+.btn-oranye:hover {
+    background-color: var(--oranye-tua);
+    border-color: var(--oranye-tua);
+    color: var(--putih);
+}
+
+.btn-outline-coklat {
+    color: var(--coklat);
+    border-color: var(--coklat);
+    font-weight: 600;
+}
+
+.btn-outline-coklat:hover {
+    background-color: var(--coklat);
+    border-color: var(--coklat);
+    color: var(--putih);
+}

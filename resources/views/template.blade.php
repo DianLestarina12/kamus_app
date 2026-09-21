@@ -5,16 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">   
-    
+     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
 </head>
 <style>
     .container {
-        max-width: 80%;
-        margin: 20px auto;
-        background-color: #f8f9fa;
+        max-width: 90%;
+        margin: 10px auto;
+        /* background-color: #f8f9fa; */
         padding: 20px;
         border-radius: 5px;
         
@@ -41,27 +42,43 @@
         color: #6E491C;
     }
 </style>
-<body style="justify-content: center; align-items: center;">
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-    <div class="container-fluid spc-container-navbar">
+
+
+
+<body style="">
+   <nav class="navbar navbar-expand-lg navbar-kamus sticky-top">
+    <div class="container">
+        <!-- <a class="navbar-brand" href="{{ route('kata.index') }}">
+            <i class="bi bi-book-half"></i> Kamus App
+        </a> -->
         <a class="navbar-brand" href="#">KAMUS ANGGAH-UNGGUH <br>
 KRUNA BASA BALI</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarKamus">
+            <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-        <div class="navbar-nav spc-navbar">
-            <a class="nav-link active" aria-current="page" href="#">Beranda</a>
-            <a class="nav-link" href="#">Materi Belajar</a>
-            <a class="nav-link" href="#">Kuis Evaluasi</a>
-            <a class="nav-link" href="#">Tentang</a>
-            <span class="nav-link disabled"> | </span>
-            <a class="nav-link" href="#"> <u>Admin</u></a>
-            <a class="nav-link btn spc-btn btn-success">Masuk</a>
-        </div>
+        <div class="collapse navbar-collapse" id="navbarKamus">
+            <ul class="navbar-nav ms-lg-auto align-items-lg-center mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('kata.index') ? 'active' : '' }}" href="{{ route('kata.index') }}">Daftar Kata</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('kata.create') || request()->routeIs('kata.store') ? 'active' : '' }}" href="{{ route('kata.create') }}">Tambah Kata</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('kata.import*') ? 'active' : '' }}" href="{{ route('kata.import.form') }}">Import CSV</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link">Sampah</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link">Tentang</a>
+                </li>
+            </ul>
+            <a href="#" class="btn btn-login ms-lg-3">Login</a>
         </div>
     </div>
-    </nav>
+</nav>
+
     <div class="container">
         @yield('content')
         @yield('modal')
