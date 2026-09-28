@@ -1,27 +1,57 @@
 @extends('template')
 @section('content')
-<form method="GET" action="{{ route('kata.index') }}" class="mb-3">
-    <div class="input-group" style="max-width: 420px;">
-        <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
-        <input type="text" name="q" value="{{ $search }}" class="form-control" placeholder="Cari kata...">
-        <button type="submit" class="btn btn-oranye">Cari</button>
+
+<!-- 👇👇👇 MASUKKAN KODE BARU DI SINI 👇👇👇 -->
+<div class="d-flex justify-content-between align-items-start mb-4 mt-3">
+    
+    <!-- Bagian Kiri: Judul Dashboard -->
+    <h4 class="mb-0 mt-2" style="color: black; font-weight: bold; font-family: 'Libre Baskerville', serif;">
+        DASHBOARD PENGELOLAAN <br> KATA OLEH ADMIN
+    </h4>
+
+    <!-- Bagian Kanan: Pencarian dan Tombol Tambah -->
+    <div class="d-flex flex-column align-items-end gap-3">
+        
+        <!-- Baris 1: Kotak Pencarian -->
+        <form method="GET" action="{{ route('kata.index') }}" class="d-flex">
+            <!-- Group Input (Teks & Ikon Kaca Pembesar) -->
+            <div class="input-group shadow-sm" style="width: 300px;">
+                <input type="text" name="q" value="{{ $search ?? '' }}" class="form-control" placeholder="Cari Kata" style="border-color: #8c7355; border-right: none;">
+                <span class="input-group-text bg-white" style="border-color: #8c7355; border-left: none;">
+                    <i class="bi bi-search" style="color: #333;"></i>
+                </span>
+            </div>
+            <!-- Tombol Cari Cokelat -->
+            <button class="btn ms-3 shadow-sm" type="submit" style="background-color: #6E491C; color: white; border-radius: 6px; padding: 6px 24px; font-weight: 500;">
+                Cari
+            </button>
+        </form>
+
+        <!-- Baris 2: Tombol Tambah Kata -->
+        <button type="button" class="btn shadow-sm" data-bs-toggle="modal" data-bs-target="#tambahModal" style="background-color: #F4A259; color: white; border-radius: 6px; width: 160px; font-weight: bold;">
+        Tambah Kata
+    </button>
+
     </div>
-</form>
+    
+</div>
+<!-- 👆👆👆 SAMPAI SINI 👆👆👆 -->
 
         @php
             $columns = [
-                'kruna_andap' => 'Kata Andap',
-                'kruna_asi' => 'Kata Asi',
-                'kruna_aso' => 'Kata Aso',
-                'kruna_ami' => 'Kata Ami',
-                'kruna_mider' => 'Kata Mider',
-                'kruna_kasar' => 'Kata Kasar',
+                'kruna_andap' => 'Kruna Andap',
+                'kruna_asi' => 'Kruna Asi',
+                'kruna_aso' => 'Kruna Aso',
+                'kruna_ami' => 'Kruna Ami',
+                'kruna_mider' => 'Kruna Mider',
+                'kruna_kasar' => 'Kruna Kasar',
                 'bahasa_indonesia' => 'Bahasa Indonesia',
             ];
         @endphp
 
 <div class="table-responsive card-kamus p-2 shadow-sm">
     <table class="table table-kamus table-striped table-hover align-middle mb-0"> 
+    <table class="table-custom">
     <thead>
     <tr>
         <th>No</th>
@@ -57,7 +87,8 @@
 
                 @foreach ($katas as $index => $kata)
                     <tr>
-                       <td>{{ $index + 1 }}</td>
+                        <td>{{ $katas->firstItem() + $index }}</td>
+                        <!--<td>{{ $index + 1 }}</td> --->
                         <td>{{ $kata->kruna_andap }}</td>
                         <td>{{ $kata->kruna_asi }}</td>
                         <td>{{ $kata->kruna_aso }}</td>
@@ -66,16 +97,18 @@
                         <td>{{ $kata->kruna_kasar }}</td>
                         <td>{{ $kata->bahasa_indonesia }}</td>
                         <td>
-                        <button type="button" class="edit-btn btn btn-sm btn-outline-coklat m-1"
-                            data-id="{{ $kata->id }}"
-                            data-action="{{ route('kata.update', $kata) }}"
-                            data-kruna_andap="{{ $kata->kruna_andap }}"
-                            data-kruna_asi="{{ $kata->kruna_asi }}"
-                            data-kruna_aso="{{ $kata->kruna_aso }}"
-                            data-kruna_ami="{{ $kata->kruna_ami }}"
-                            data-kruna_mider="{{ $kata->kruna_mider }}"
-                            data-kruna_kasar="{{ $kata->kruna_kasar }}"
-                            data-bahasa_indonesia="{{ $kata->bahasa_indonesia }}">Edit</button>
+                        <button type="button" class="edit-btn btn btn-outline-coklat btn-sm m-1"
+                        data-id="{{ $kata->id }}"
+                        data-action="{{ route('kata.update', $kata->id) }}"
+                        data-kruna_andap="{{ $kata->kruna_andap }}"
+                        data-kruna_asi="{{ $kata->kruna_asi }}"
+                        data-kruna_aso="{{ $kata->kruna_aso }}"
+                        data-kruna_ami="{{ $kata->kruna_ami }}"
+                        data-kruna_mider="{{ $kata->kruna_mider }}"
+                        data-kruna_kasar="{{ $kata->kruna_kasar }}"
+                        data-bahasa_indonesia="{{ $kata->bahasa_indonesia }}">
+                        Edit
+                    </button>
 
                            <form action="{{ route('kata.destroy', $kata->id) }}" method="POST" class="d-inline">
                                 @csrf
@@ -87,85 +120,141 @@
                 @endforeach
             </tbody>
     </table>
+    <div class="d-flex justify-content-center mt-4 mb-6">
+        {{ $katas->appends(request()->query())->links() }}
+    </div>
 </div>
 
-
-
-<div class="modal fade modal-kamus" id="editModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form method="POST" id="editForm">
+<!-- 👇👇👇 KODE MODAL TAMBAH KATA 👇👇👇 -->
+<div class="modal fade modal-tambah-kata" id="tambahModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content p-2">
+            
+            <div class="modal-header position-relative">
+                <h5 class="modal-title">Tambah Kata Baru</h5>
+                <button type="button" class="btn-close position-absolute end-0 me-3" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            
+            <!-- Form ini akan mengirim data ke fungsi store di controller -->
+            <form action="{{ route('kata.store') }}" method="POST">
                 @csrf
-                @method('PUT')
-                <input type="hidden" name="_kata_id" id="edit_kata_id">
-                <div class="modal-header">
-                    <h5 class="modal-title">Edit Kata</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
+                
                 <div class="modal-body">
-                   <form method="POST" id="editForm">
-            @csrf
-            @method('PUT')
-            <input type="text" name="kata_id" id="edit_kruna_id" hidden>
-            @error('kata_id')
-                <div class="error">{{ $message }}</div>
-            @enderror
-
-            <label for="edit_kruna_andap">Kata Andap</label>
-            <input type="text" name="kata_andap" id="edit_kruna_andap">
-            @error('kata_andap')
-                <div class="error">{{ $message }}</div>
-            @enderror
-
-            <label for="edit_kruna_asi">Kata Alus Singgih</label>
-            <input type="text" name="kata_asi" id="edit_kruna_asi">
-            @error('kata_asi')
-                <div class="error">{{ $message }}</div>
-            @enderror
-
-            <label for="edit_kruna_aso">Kata Alus Sor</label>
-            <input type="text" name="kata_aso" id="edit_kruna_aso">
-            @error('kata_aso')
-                <div class="error">{{ $message }}</div>
-            @enderror
-
-            <label for="edit_kruna_ami">Kata Alus Mider</label>
-            <input type="text" name="kata_ami" id="edit_kruna_ami">
-            @error('kata_ami')
-                <div class="error">{{ $message }}</div>
-            @enderror
-
-            <label for="edit_kruna_mider">Kata Mider</label>
-            <input type="text" name="kata_mider" id="edit_kruna_mider">
-            @error('kata_mider')
-                <div class="error">{{ $message }}</div>
-            @enderror
-
-            <label for="edit_kruna_kasar">Kasar</label>
-            <input type="text" name="kata_kasar" id="edit_kruna_kasar">
-            @error('kata_kasar')
-                <div class="error">{{ $message }}</div>
-            @enderror
-
-            <label for="edit_bahasa_indonesia">Bahasa Indonesia</label>
-            <textarea name="bahasa_indonesia" id="edit_bahasa_indonesia" rows="4"></textarea>
-            @error('bahasa_indonesia')
-                <div class="error">{{ $message }}</div>
-            @enderror
-
-            <button type="submit">Simpan Perubahan</button>
-            <button type="button" id="editModalClose">Batal</button>
-        </form>
+                    <div class="mb-3">
+                        <label for="tambah_kruna_andap" class="form-label">Kata Andap</label>
+                        <input type="text" name="kruna_andap" id="tambah_kruna_andap" class="form-control" placeholder="masukan kata" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="tambah_kruna_asi" class="form-label">Kata Alus Singgih (ASI)</label>
+                        <input type="text" name="kruna_asi" id="tambah_kruna_asi" class="form-control" placeholder="masukan kata" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="tambah_kruna_aso" class="form-label">Kata Alus Sor (ASO)</label>
+                        <input type="text" name="kruna_aso" id="tambah_kruna_aso" class="form-control" placeholder="masukan kata" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="tambah_kruna_ami" class="form-label">Kata Alus Mider (AMI)</label>
+                        <input type="text" name="kruna_ami" id="tambah_kruna_ami" class="form-control" placeholder="masukan kata" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="tambah_kruna_mider" class="form-label">Kata Mider</label>
+                        <input type="text" name="kruna_mider" id="tambah_kruna_mider" class="form-control" placeholder="masukan kata" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="tambah_kruna_kasar" class="form-label">Kasar</label>
+                        <input type="text" name="kruna_kasar" id="tambah_kruna_kasar" class="form-control" placeholder="masukan kata" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="tambah_bahasa_indonesia" class="form-label">Bahasa Indonesia</label>
+                        <textarea name="bahasa_indonesia" id="tambah_bahasa_indonesia" class="form-control" rows="3" placeholder="masukan kata" required></textarea>
+                    </div>
                 </div>
+                
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-coklat" data-bs-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-oranye">Simpan Perubahan</button>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-oranye" style="background-color: #F4A259; color: white;">Simpan</button>
                 </div>
             </form>
+            
         </div>
     </div>
 </div>
-<script>
+<!-- 👆👆👆 SAMPAI SINI 👆👆👆 -->
+
+<!-- Modal Edit Baru --> 
+<div class="modal fade modal-tambah-kata" id="editModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content p-2">
+            
+            <div class="modal-header position-relative">
+                <h5 class="modal-title">Edit Kata</h5>
+                <button type="button" class="btn-close position-absolute end-0 me-3" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            
+            <!-- HANYA BOLEH ADA SATU TAG FORM -->
+            <form method="POST" id="editForm">
+                @csrf
+                @method('PUT')
+                
+                <input type="hidden" name="kata_id" id="edit_kata_id">
+                
+                <div class="modal-body">
+                    
+                    <div class="mb-3">
+                        <label for="edit_kruna_andap" class="form-label">Kata Andap</label>
+                        <input type="text" name="kruna_andap" id="edit_kruna_andap" class="form-control">
+                        @error('kruna_andap') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="edit_kruna_asi" class="form-label">Kata Alus Singgih (ASI)</label>
+                        <input type="text" name="kruna_asi" id="edit_kruna_asi" class="form-control">
+                        @error('kruna_asi') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="edit_kruna_aso" class="form-label">Kata Alus Sor (ASO)</label>
+                        <input type="text" name="kruna_aso" id="edit_kruna_aso" class="form-control">
+                        @error('kruna_aso') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="edit_kruna_ami" class="form-label">Kata Alus Mider (AMI)</label>
+                        <input type="text" name="kruna_ami" id="edit_kruna_ami" class="form-control">
+                        @error('kruna_ami') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="edit_kruna_mider" class="form-label">Kata Mider</label>
+                        <input type="text" name="kruna_mider" id="edit_kruna_mider" class="form-control">
+                        @error('kruna_mider') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="edit_kruna_kasar" class="form-label">Kasar</label>
+                        <input type="text" name="kruna_kasar" id="edit_kruna_kasar" class="form-control">
+                        @error('kruna_kasar') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="edit_bahasa_indonesia" class="form-label">Bahasa Indonesia</label>
+                        <textarea name="bahasa_indonesia" id="edit_bahasa_indonesia" class="form-control" rows="4"></textarea>
+                        @error('bahasa_indonesia') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
+                    </div>
+
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-batal" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-simpan">Simpan Perubahan</button>
+                </div>
+                
+            </form>
+            
+        </div>
+    </div>
+</div>
+<!--<script>
     const editModalEl = document.getElementById('editModal');
     const editModal = new bootstrap.Modal(editModalEl);
     const editForm = document.getElementById('editForm');
@@ -186,6 +275,27 @@
 
     document.querySelectorAll('.edit-btn').forEach((btn) => {
         btn.addEventListener('click', () => openEditModal(btn.dataset));
+    });--->
+
+    <!-- new code untuk edit modal -->
+     <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.body.addEventListener('click', function(e) {
+            const btn = e.target.closest('.edit-btn');
+            if (btn) {
+                const data = btn.dataset;
+                const editForm = document.getElementById('editForm');
+                
+                editForm.action = data.action;
+                document.getElementById('edit_kata_id').value = data.id || '';
+                // ... (pengisian input lainnya)
+                
+                const editModalEl = document.getElementById('editModal');
+                const modalInstance = bootstrap.Modal.getOrCreateInstance(editModalEl);
+                modalInstance.show();
+            }
+        });
     });
+</script>
 </script>
 @endsection

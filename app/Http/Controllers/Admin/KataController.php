@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Katas;
 use Illuminate\Support\Facades\DB;
 
 class KataController extends Controller
 {
-
     protected const SORTABLE_COLUMNS = [
         'kruna_andap', 'kruna_asi', 'kruna_aso', 'kruna_ami', 'kruna_mider', 'kruna_kasar', 'bahasa_indonesia',
     ];
@@ -33,7 +33,7 @@ class KataController extends Controller
 
         $sort ? $query->orderBy($sort, $direction) : $query->latest();
 
-        $katas = $query->get();
+        $katas = $query->paginate(10);
 
         return view('kata.index', compact('katas', 'search', 'sort', 'direction'));
     }
@@ -169,5 +169,5 @@ class KataController extends Controller
         return redirect()->route('kata.index')
             ->with('success', "Import selesai: {$imported} kata ditambahkan, {$skipped} dilewati (duplikat/kosong).");
     }
-
+    
 }
