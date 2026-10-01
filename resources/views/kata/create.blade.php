@@ -1,6 +1,6 @@
 @extends('template')
 @section('content')
-    <form action="{{ route('kata.store') }}" method="POST">
+    <form action="{{ route('admin.kata.store') }}" method="POST">
         @csrf
         <input type="text" name="kruna_andap" placeholder="Masukkan Kruna Andap">
         <input type="text" name="kruna_asi" placeholder="Masukkan Kruna Asi">

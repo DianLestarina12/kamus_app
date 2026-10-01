@@ -26,7 +26,7 @@ class Katas extends Model
  
     protected static function booted(): void
     {
-        static::saving(function (Kata $kata) {
+        static::saving(function (self $kata) {
             $kata->sidik = self::hitungSidik($kata->getAttributes());
         });
     }

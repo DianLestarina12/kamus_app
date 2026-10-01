@@ -23,6 +23,54 @@ class KamusController extends Controller
             return redirect()->route('kamus.beranda');
         }
  
+        $grup = $this->hasilPencarian($search);
+ 
+        return view('kamus.hasil', compact('grup', 'search'));
+    }
+ 
+    // Detail katas: tabel anggah-ungguh lengkap + kata terkait
+    public function show(Request $request, Katas $kata)
+    {
+        $kata->load(['sinonim', 'homonim']);
+ 
+        $tingkatan = $request->query('tingkatan');
+ 
+        if (! in_array($tingkatan, Katas::tingkatanKeys(), true)) {
+            $tingkatan = null;
+        }
+ 
+        $berikutnya = $this->berikutnya($kata, $tingkatan, trim((string) $request->query('q', '')));
+ 
+        return view('kamus.detail', compact('kata', 'tingkatan', 'berikutnya'));
+    }
+ 
+    // Tautan "Selanjutnya": entri berikutnya pada hasil pencarian /cari?q=...,
+    // atau kata dengan id berikutnya bila halaman tidak dibuka dari pencarian.
+    protected function berikutnya(Katas $kata, ?string $tingkatan, string $search): ?string
+    {
+        if ($search !== '') {
+            $hasil = $this->hasilPencarian($search)->flatten(1)->values();
+ 
+            $posisi = $hasil->search(fn ($item) => $item['kata']->id === $kata->id
+                && ($tingkatan === null || $item['tingkatan'] === $tingkatan));
+ 
+            if ($posisi !== false) {
+                $item = $hasil->get($posisi + 1);
+ 
+                return $item
+                    ? route('kamus.detail', ['kata' => $item['kata'], 'tingkatan' => $item['tingkatan'], 'q' => $search])
+                    : null;
+            }
+        }
+ 
+        $berikutnya = Katas::where('id', '>', $kata->id)->orderBy('id')->first();
+ 
+        return $berikutnya ? route('kamus.detail', $berikutnya) : null;
+    }
+ 
+    // Setiap bentuk kata yang cocok sebagai satu entri, dikelompokkan menurut huruf awal.
+    protected function hasilPencarian(string $search)
+    {
         $tingkatanKeys = Katas::tingkatanKeys();
  
         $katas = Katas::query()
@@ -56,27 +104,9 @@ class KamusController extends Controller
             }
         }
  
-        $grup = collect($hasil)
+        return collect($hasil)
             ->sortBy(fn ($item) => mb_strtolower($item['bentuk']), SORT_NATURAL)
             ->groupBy(fn ($item) => mb_strtoupper(mb_substr($item['bentuk'], 0, 1)))
             ->sortKeys();
- 
-        return view('kamus.hasil', compact('grup', 'search'));
-    }
- 
-    // Detail katas: tabel anggah-ungguh lengkap + kata terkait
-    public function show(Request $request, Katas $kata)
-    {
-        $kata->load(['sinonim', 'homonim']);
- 
-        $tingkatan = $request->query('tingkatan');
- 
-        if (! in_array($tingkatan, Katas::tingkatanKeys(), true)) {
-            $tingkatan = null;
-        }
- 
-        $berikutnya = Katas::where('id', '>', $kata->id)->orderBy('id')->first();
- 
-        return view('kamus.detail', compact('kata', 'tingkatan', 'berikutnya'));
     }
 }

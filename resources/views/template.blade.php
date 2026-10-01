@@ -236,7 +236,7 @@
 <!--
    <nav class="navbar navbar-expand-lg navbar-kamus sticky-top">
     <div class="container">
-        <!-- <a class="navbar-brand" href="{{ route('kata.index') }}">
+        <!-- <a class="navbar-brand" href="{{ route('admin.kata.index') }}">
             <i class="bi bi-book-half"></i> Kamus App
         </a> 
         <a class="navbar-brand" href="#">KAMUS ANGGAH-UNGGUH <br> KRUNA BASA BALI</a>
@@ -246,13 +246,13 @@
         <div class="collapse navbar-collapse" id="navbarKamus">
             <ul class="navbar-nav ms-lg-auto align-items-lg-center mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('kata.index') ? 'active' : '' }}" href="{{ route('kata.index') }}">Beranda</a>
+                    <a class="nav-link {{ request()->routeIs('admin.kata.index') ? 'active' : '' }}" href="{{ route('admin.kata.index') }}">Beranda</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('kata.create') || request()->routeIs('kata.store') ? 'active' : '' }}" href="{{ route('kata.create') }}">Materi Belajar</a>
+                    <a class="nav-link {{ request()->routeIs('admin.kata.create') || request()->routeIs('admin.kata.store') ? 'active' : '' }}" href="{{ route('admin.kata.create') }}">Materi Belajar</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('kata.import*') ? 'active' : '' }}" href="{{ route('kata.import.form') }}">Kuis Evaluasi</a>
+                    <a class="nav-link {{ request()->routeIs('admin.kata.import*') ? 'active' : '' }}" href="{{ route('admin.kata.import.form') }}">Kuis Evaluasi</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link">Tentang</a>
@@ -282,13 +282,13 @@
         <div class="d-flex align-items-center">
             <ul class="navbar-nav flex-row align-items-center mb-0">
                 <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('kata.index') ? 'active' : '' }}" href="{{ route('kata.index') }}">Beranda</a>
+                    <a class="nav-link {{ request()->routeIs('admin.kata.index') ? 'active' : '' }}" href="{{ route('admin.kata.index') }}">Beranda</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('kata.create') || request()->routeIs('kata.store') ? 'active' : '' }}" href="{{ route('kata.create') }}">Materi Belajar</a>
+                    <a class="nav-link {{ request()->routeIs('admin.kata.create') || request()->routeIs('admin.kata.store') ? 'active' : '' }}" href="{{ route('admin.kata.create') }}">Materi Belajar</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('kata.import*') ? 'active' : '' }}" href="{{ route('kata.import.form') }}">Kuis Evaluasi</a>
+                    <a class="nav-link {{ request()->routeIs('admin.kata.import*') ? 'active' : '' }}" href="{{ route('admin.kata.import.form') }}">Kuis Evaluasi</a>
                 </li>
                 
                 <!-- Garis Pemisah | -->
