@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -58,7 +58,7 @@ class KataController extends Controller
 
         Katas::create($request->all());
 
-        return redirect()->route('kata.index')
+        return redirect()->route('admin.kata.index')
                         ->with('success','Kata created successfully.');
                         
     }
@@ -84,7 +84,7 @@ class KataController extends Controller
         $kata = Katas::findOrFail($id);
         $kata->update($request->all());
 
-        return redirect()->route('kata.index')
+        return redirect()->route('admin.kata.index')
                         ->with('success','Kata updated successfully');
     } 
 
@@ -93,7 +93,7 @@ class KataController extends Controller
         $kata = Katas::findOrFail($id);
         $kata->delete();
 
-        return redirect()->route('kata.index')
+        return redirect()->route('admin.kata.index')
                         ->with('success','Kata deleted successfully');
     }
 
@@ -110,14 +110,16 @@ class KataController extends Controller
         ]);
 
         $handle = fopen($request->file('file')->getRealPath(), 'r');
-        fgetcsv($handle); // skip header row
+        fgetcsv($handle, null, ",", "\"", ""); // skip header row
 
         $imported = 0;
         $skipped = 0;
         $rowsToInsert = [];
         $chunkSize = 1000; // Process 1,000 rows per batch
+        $seenSidik = [];
+        $now = now();
 
-        while (($row = fgetcsv($handle)) !== false) {
+        while (($row = fgetcsv($handle, null, ",", "\"", "")) !== false) {
             $kruna_andap = trim($row[0] ?? '');
             $bahasa_indonesia = trim($row[6] ?? '');
 
@@ -135,7 +137,7 @@ class KataController extends Controller
             $kruna_kasar = trim($row[5] ?? '');
             $bahasa_indonesia = trim($row[6] ?? '');
 
-            $rowsToInsert[] = [
+            $row = [
                 'kruna_andap' => $kruna_andap !== '' ? $kruna_andap : null,
                 'kruna_asi' => $kruna_asi !== '' ? $kruna_asi : null, 
                 'kruna_aso' => $kruna_aso !== '' ? $kruna_aso : null,
@@ -145,11 +147,22 @@ class KataController extends Controller
                 'bahasa_indonesia' => $bahasa_indonesia,
             ];
 
+            // Bulk insert skips model events, so compute sidik here
+            $row['sidik'] = Katas::hitungSidik($row);
+
+            // Skip rows duplicated within the same file
+            if (isset($seenSidik[$row['sidik']])) {
+                $skipped++;
+                continue;
+            }
+            $seenSidik[$row['sidik']] = true;
+
+            $rowsToInsert[] = $row + ['created_at' => $now, 'updated_at' => $now];
+
             // Process in chunks to keep memory usage low
             if (count($rowsToInsert) >= $chunkSize) {
-                // insertOrIgnore skips duplicates natively at the database level
-                $insertedInBatch = Katas::insertOrIgnore($rowsToInsert);
-                
+                $insertedInBatch = $this->insertKataBaru($rowsToInsert);
+
                 $imported += $insertedInBatch;
                 $skipped += (count($rowsToInsert) - $insertedInBatch);
                 
@@ -159,15 +172,28 @@ class KataController extends Controller
 
         // Process any remaining rows left in the array
         if (count($rowsToInsert) > 0) {
-            $insertedInBatch = Katas::insertOrIgnore($rowsToInsert);
+            $insertedInBatch = $this->insertKataBaru($rowsToInsert);
             $imported += $insertedInBatch;
             $skipped += (count($rowsToInsert) - $insertedInBatch);
         }
 
         fclose($handle);
 
-        return redirect()->route('kata.index')
+        return redirect()->route('admin.kata.index')
             ->with('success', "Import selesai: {$imported} kata ditambahkan, {$skipped} dilewati (duplikat/kosong).");
     }
-    
+
+    // Insert rows whose sidik is not yet in the dictionary; returns the number inserted
+    protected function insertKataBaru(array $rows): int
+    {
+        $sudahAda = Katas::whereIn('sidik', array_column($rows, 'sidik'))->pluck('sidik')->flip();
+
+        $baru = array_values(array_filter($rows, fn ($row) => ! isset($sudahAda[$row['sidik']])));
+
+        if ($baru !== []) {
+            Katas::insert($baru);
+        }
+
+        return count($baru);
+    }
 }

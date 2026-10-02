@@ -13,7 +13,7 @@
     <div class="d-flex flex-column align-items-end gap-3">
         
         <!-- Baris 1: Kotak Pencarian -->
-        <form method="GET" action="{{ route('kata.index') }}" class="d-flex">
+        <form method="GET" action="{{ route('admin.kata.index') }}" class="d-flex">
             <!-- Group Input (Teks & Ikon Kaca Pembesar) -->
             <div class="input-group shadow-sm" style="width: 300px;">
                 <input type="text" name="q" value="{{ $search ?? '' }}" class="form-control" placeholder="Cari Kata" style="border-color: #8c7355; border-right: none;">
@@ -27,10 +27,15 @@
             </button>
         </form>
 
-        <!-- Baris 2: Tombol Tambah Kata -->
-        <button type="button" class="btn shadow-sm" data-bs-toggle="modal" data-bs-target="#tambahModal" style="background-color: #F4A259; color: white; border-radius: 6px; width: 160px; font-weight: bold;">
-        Tambah Kata
-    </button>
+        <!-- Baris 2: Tombol Import CSV & Tambah Kata -->
+        <div class="d-flex gap-2">
+            <a href="{{ route('admin.kata.import.form') }}" class="btn btn-outline-coklat shadow-sm" style="border-radius: 6px; width: 160px; font-weight: bold;">
+                <i class="bi bi-upload"></i> Import CSV
+            </a>
+            <button type="button" class="btn shadow-sm" data-bs-toggle="modal" data-bs-target="#tambahModal" style="background-color: #F4A259; color: white; border-radius: 6px; width: 160px; font-weight: bold;">
+                Tambah Kata
+            </button>
+        </div>
 
     </div>
     
@@ -60,7 +65,7 @@
                 $nextDirection = ($sort === $field && $direction === 'asc') ? 'desc' : 'asc';
             @endphp
             <th>
-                <a style="text-decoration:none; color: black;" href="{{ route('kata.index', array_filter(['q' => $search, 'sort' => $field, 'direction' => $nextDirection])) }}">
+                <a style="text-decoration:none; color: black;" href="{{ route('admin.kata.index', array_filter(['q' => $search, 'sort' => $field, 'direction' => $nextDirection])) }}">
                     {{ $label }}
                     @if ($sort === $field)
                         {{ $direction === 'asc' ? '▲' : '▼' }}
@@ -99,7 +104,7 @@
                         <td>
                         <button type="button" class="edit-btn btn btn-outline-coklat btn-sm m-1"
                         data-id="{{ $kata->id }}"
-                        data-action="{{ route('kata.update', $kata->id) }}"
+                        data-action="{{ route('admin.kata.update', $kata->id) }}"
                         data-kruna_andap="{{ $kata->kruna_andap }}"
                         data-kruna_asi="{{ $kata->kruna_asi }}"
                         data-kruna_aso="{{ $kata->kruna_aso }}"
@@ -110,7 +115,9 @@
                         Edit
                     </button>
 
-                           <form action="{{ route('kata.destroy', $kata->id) }}" method="POST" class="d-inline">
+                        <a href="{{ route('admin.kata.relasi.index', $kata) }}" class="btn btn-outline-coklat btn-sm m-1">Relasi</a>
+
+                           <form action="{{ route('admin.kata.destroy', $kata->id) }}" method="POST" class="d-inline">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-sm btn-danger" class="bi bi-trash3" onclick="return confirm('Are you sure?')">Delete</button>
@@ -136,7 +143,7 @@
             </div>
             
             <!-- Form ini akan mengirim data ke fungsi store di controller -->
-            <form action="{{ route('kata.store') }}" method="POST">
+            <form action="{{ route('admin.kata.store') }}" method="POST">
                 @csrf
                 
                 <div class="modal-body">

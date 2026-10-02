@@ -59,7 +59,7 @@
         @endif
  
         @if ($berikutnya)
-            <a class="btn btn-selanjutnya" href="{{ route('kamus.detail', $berikutnya) }}">Selanjutnya</a>
+            <a class="btn btn-selanjutnya" href="{{ $berikutnya }}">Selanjutnya</a>
         @endif
     </div>
 @endsection

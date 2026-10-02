@@ -10,7 +10,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-         <form method="POST" action="{{ route('kata.update', $kata) }}">
+         <form method="POST" action="{{ route('admin.kata.update', $kata) }}">
         @csrf
         @method('PUT')
 
@@ -57,7 +57,7 @@
         @enderror
 
         <button type="submit">Simpan Perubahan</button>
-        <a href="{{ route('kata.index') }}">Kembali</a>
+        <a href="{{ route('admin.kata.index') }}">Kembali</a>
     </form> 
       </div>
       <div class="modal-footer">
@@ -71,7 +71,7 @@
 
     <!-- <h1>Edit Kata</h1> -->
 
-    <!-- <form method="POST" action="{{ route('kata.update', $kata) }}">
+    <!-- <form method="POST" action="{{ route('admin.kata.update', $kata) }}">
         @csrf
         @method('PUT')
 
@@ -118,6 +118,6 @@
         @enderror
 
         <button type="submit">Simpan Perubahan</button>
-        <a href="{{ route('kata.index') }}">Kembali</a>
+        <a href="{{ route('admin.kata.index') }}">Kembali</a>
     </form>  -->
 @endsection

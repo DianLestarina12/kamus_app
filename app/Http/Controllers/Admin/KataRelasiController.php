@@ -28,7 +28,7 @@ class KataRelasiController extends Controller
         ]);
  
         if ((int) $validated['kata_terkait_id'] === $kata->id) {
-            return back()->withErrors(['kata_terkait_id' => 'Katas tidak bisa direlasikan dengan dirinya sendiri.']);
+            return back()->withErrors(['kata_terkait_id' => 'Kata tidak bisa direlasikan dengan dirinya sendiri.']);
         }
  
         $sudahAda = $kata->{$validated['tipe']}()
@@ -44,7 +44,7 @@ class KataRelasiController extends Controller
             'tingkatan' => $validated['tingkatan'] ?? null,
         ]);
  
-        return back()->with('success', 'Katas terkait berhasil ditambahkan.');
+        return back()->with('success', 'Kata terkait berhasil ditambahkan.');
     }
  
     public function destroy(Katas $kata, string $tipe, Katas $terkait)
@@ -53,6 +53,6 @@ class KataRelasiController extends Controller
  
         $kata->{$tipe}()->detach($terkait->id);
  
-        return back()->with('success', 'Katas terkait berhasil dihapus.');
+        return back()->with('success', 'Kata terkait berhasil dihapus.');
     }
 }

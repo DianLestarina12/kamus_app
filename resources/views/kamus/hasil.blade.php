@@ -11,7 +11,7 @@
         <h2 class="hasil-huruf">{{ $huruf }}</h2>
  
         @foreach ($daftar as $item)
-            <a class="hasil-item" href="{{ route('kamus.detail', ['kata' => $item['kata'], 'tingkatan' => $item['tingkatan']]) }}">
+            <a class="hasil-item" href="{{ route('kamus.detail', ['kata' => $item['kata'], 'tingkatan' => $item['tingkatan'], 'q' => $search]) }}">
                 <span class="hasil-bentuk"><x-sorot :teks="$item['bentuk']" :cari="$search" /></span>
                 <span class="badge-tingkatan">{{ \App\Models\Katas::tingkatanLabel($item['tingkatan']) }}</span>
             </a>
