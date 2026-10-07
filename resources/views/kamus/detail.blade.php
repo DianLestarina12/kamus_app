@@ -21,8 +21,9 @@
         @foreach (\App\Models\Katas::tingkatanKeys() as $kolom)
             <div class="tabel-anggah-baris {{ $kolom === $tingkatan ? 'aktif' : '' }}">
                 <span class="tabel-anggah-label">{{ \App\Models\Katas::tingkatanLabel($kolom, true) }}</span>
-                <span class="tabel-anggah-nilai {{ blank($kata->{$kolom}) ? 'kosong' : '' }}">
-                    {{ filled($kata->{$kolom}) ? $kata->{$kolom} : '- Tidak Tersedia' }}
+                @php($adaBentuk = \App\Models\Katas::adaBentuk($kata->{$kolom}))
+                <span class="tabel-anggah-nilai {{ $adaBentuk ? '' : 'kosong' }}">
+                    {{ $adaBentuk ? $kata->{$kolom} : '- Tidak tersedia' }}
                 </span>
             </div>
         @endforeach
