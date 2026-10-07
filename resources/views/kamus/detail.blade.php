@@ -33,31 +33,39 @@
         </div>
     </div>
  
+    <div class="kotak-relasi-grup">
+        <div class="kotak-relasi">
+            <h2 class="kotak-relasi-judul">Sinonim</h2>
+
+            @forelse ($sinonim as $terkait)
+                @php($tingkatanTerkait = $tingkatan && \App\Models\Katas::adaBentuk($terkait->{$tingkatan}) ? $tingkatan : null)
+                <a class="kotak-relasi-baris" href="{{ route('kamus.detail', ['kata' => $terkait, 'tingkatan' => $tingkatanTerkait]) }}">
+                    <span class="kotak-relasi-kata">{{ $terkait->bentukUtama($tingkatanTerkait) }}</span>
+                    <span class="kotak-relasi-arti">{{ $terkait->bahasa_indonesia }}</span>
+                </a>
+            @empty
+                <p class="kotak-relasi-kosong">Belum ada sinonim.</p>
+            @endforelse
+        </div>
+
+        <div class="kotak-relasi">
+            <h2 class="kotak-relasi-judul">Homonim</h2>
+
+            @forelse ($homonim as $item)
+                <a class="kotak-relasi-baris" href="{{ route('kamus.detail', ['kata' => $item['kata'], 'tingkatan' => $item['tingkatan']]) }}">
+                    <span class="kotak-relasi-kata">
+                        {{ $item['bentuk'] }}
+                        <small class="kotak-relasi-tingkatan">{{ \App\Models\Katas::tingkatanLabel($item['tingkatan']) }}</small>
+                    </span>
+                    <span class="kotak-relasi-arti">{{ $item['kata']->bahasa_indonesia }}</span>
+                </a>
+            @empty
+                <p class="kotak-relasi-kosong">Belum ada homonim.</p>
+            @endforelse
+        </div>
+    </div>
+
     <div class="detail-kaki">
-        @if ($kata->sinonim->isNotEmpty() || $kata->homonim->isNotEmpty())
-            <div class="panel-terkait">
-                <h2 class="panel-terkait-judul">
-                    Pencarian Kata Terkait
-                    <span class="badge-terkait">Sinonim &amp; Homonim</span>
-                </h2>
- 
-                <div class="panel-terkait-isi">
-                    @foreach (['sinonim' => 'Sinonim', 'homonim' => 'Homonim'] as $tipe => $labelTipe)
-                        @foreach ($kata->{$tipe} as $terkait)
-                            <a class="kartu-terkait" href="{{ route('kamus.detail', ['kata' => $terkait, 'tingkatan' => $terkait->pivot->tingkatan]) }}">
-                                <span class="kartu-terkait-tipe">{{ strtoupper($labelTipe) }}</span>
-                                <span class="kartu-terkait-kata">{{ $terkait->bentukUtama($terkait->pivot->tingkatan) }}</span>
-                                <span class="kartu-terkait-meta">Anggah-ungguh Kruna : {{ \App\Models\Katas::tingkatanLabel($terkait->pivot->tingkatan) ?? 'Tidak ditentukan' }}</span>
-                                <span class="kartu-terkait-meta">Terjemahan bahasa Indonesia : {{ $terkait->bahasa_indonesia }}</span>
-                            </a>
-                        @endforeach
-                    @endforeach
-                </div>
-            </div>
-        @else
-            <div></div>
-        @endif
- 
         @if ($berikutnya)
             <a class="btn btn-selanjutnya" href="{{ $berikutnya }}">Selanjutnya</a>
         @endif

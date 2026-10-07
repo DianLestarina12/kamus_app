@@ -60,32 +60,115 @@ class Katas extends Model
             : $tingkatan['label'];
     }
  
-    // Bentuk kata utama: dipakai sebagai judul ketika tidak ada tingkatan spesifik yang diminta.
-    public function bentukUtama(?string $tingkatan = null): ?string
+    // Data impor memakai "-" sebagai penanda bentuk yang tidak tersedia.
+    public static function adaBentuk(?string $nilai): bool
     {
-        if ($tingkatan && filled($this->{$tingkatan} ?? null)) {
-            return $this->{$tingkatan};
-        }
+        return filled($nilai) && trim($nilai) !== '-';
+    }
  
+    // Tingkatan pertama (menurut urutan TINGKATAN) yang punya bentuk kata.
+    public function tingkatanUtama(): ?string
+    {
         foreach (self::tingkatanKeys() as $key) {
-            if (filled($this->{$key})) {
-                return $this->{$key};
+            if (self::adaBentuk($this->{$key})) {
+                return $key;
             }
         }
  
         return null;
     }
  
-    public function sinonim(): BelongsToMany
+    // Bentuk kata utama: dipakai sebagai judul ketika tidak ada tingkatan spesifik yang diminta.
+    public function bentukUtama(?string $tingkatan = null): ?string
     {
-        return $this->relasi('sinonim');
+        if ($tingkatan && self::adaBentuk($this->{$tingkatan} ?? null)) {
+            return $this->{$tingkatan};
+        }
+ 
+        $utama = $this->tingkatanUtama();
+ 
+        return $utama ? $this->{$utama} : null;
     }
  
+    // Makna-makna dalam arti bahasa Indonesia, mis. "payah, lelah" -> ['payah', 'lelah'].
+    public static function daftarArti(?string $arti): array
+    {
+        $bagian = array_map(fn ($makna) => mb_strtolower(trim($makna)), explode(',', (string) $arti));
+
+        return array_values(array_unique(array_filter($bagian, fn ($makna) => $makna !== '')));
+    }
+
+    // Sinonim berbasis arti: kata lain yang punya minimal satu makna bahasa Indonesia yang sama.
+    public function sinonimSearti()
+    {
+        $arti = self::daftarArti($this->bahasa_indonesia);
+
+        if ($arti === []) {
+            return collect();
+        }
+
+        return self::query()
+            ->whereKeyNot($this->getKey())
+            ->where(function ($query) use ($arti) {
+                foreach ($arti as $makna) {
+                    $query->orWhere('bahasa_indonesia', 'like', '%' . addcslashes($makna, '%_\\') . '%');
+                }
+            })
+            ->get()
+            ->filter(fn (self $kata) => array_intersect($arti, self::daftarArti($kata->bahasa_indonesia)) !== [])
+            ->sortBy(fn (self $kata) => mb_strtolower((string) $kata->bentukUtama()), SORT_NATURAL)
+            ->values();
+    }
+
     public function homonim(): BelongsToMany
     {
         return $this->relasi('homonim');
     }
  
+    // Bentuk-bentuk dalam satu kolom tingkatan, mis. "adénan, ngadénan" atau "geni/agni".
+    public static function daftarBentuk(?string $nilai): array
+    {
+        $bagian = array_map(fn ($bentuk) => mb_strtolower(trim($bentuk)), preg_split('/[,\/]/', (string) $nilai));
+
+        return array_values(array_unique(array_filter($bagian, fn ($bentuk) => self::adaBentuk($bentuk))));
+    }
+
+    // Homonim berbasis bentuk: kata lain yang di tingkatan mana pun punya bentuk yang sama dengan
+    // bentuk yang sedang ditampilkan. Satu entri per kata + tingkatan yang cocok.
+    public function homonimSebentuk(?string $tingkatan = null)
+    {
+        $bentukDicari = self::daftarBentuk($this->bentukUtama($tingkatan));
+
+        if ($bentukDicari === []) {
+            return collect();
+        }
+
+        $katas = self::query()
+            ->whereKeyNot($this->getKey())
+            ->where(function ($query) use ($bentukDicari) {
+                foreach (self::tingkatanKeys() as $kolom) {
+                    foreach ($bentukDicari as $bentuk) {
+                        $query->orWhere($kolom, 'like', '%' . addcslashes($bentuk, '%_\\') . '%');
+                    }
+                }
+            })
+            ->get();
+
+        $hasil = [];
+
+        foreach ($katas as $kata) {
+            foreach (self::tingkatanKeys() as $kolom) {
+                if (array_intersect($bentukDicari, self::daftarBentuk($kata->{$kolom})) !== []) {
+                    $hasil[] = ['kata' => $kata, 'bentuk' => $kata->{$kolom}, 'tingkatan' => $kolom];
+                }
+            }
+        }
+
+        return collect($hasil)
+            ->sortBy(fn ($item) => mb_strtolower($item['bentuk'] . ' ' . $item['kata']->bahasa_indonesia), SORT_NATURAL)
+            ->values();
+    }
+
     protected function relasi(string $tipe): BelongsToMany
     {
         return $this->belongsToMany(self::class, 'kata_relasi', 'kata_id', 'kata_terkait_id')

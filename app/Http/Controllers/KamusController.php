@@ -31,7 +31,7 @@ class KamusController extends Controller
     // Detail katas: tabel anggah-ungguh lengkap + kata terkait
     public function show(Request $request, Katas $kata)
     {
-        $kata->load(['sinonim', 'homonim']);
+        $sinonim = $kata->sinonimSearti();
  
         $tingkatan = $request->query('tingkatan');
  
@@ -39,9 +39,11 @@ class KamusController extends Controller
             $tingkatan = null;
         }
  
+        $homonim = $kata->homonimSebentuk($tingkatan);
+ 
         $berikutnya = $this->berikutnya($kata, $tingkatan, trim((string) $request->query('q', '')));
  
-        return view('kamus.detail', compact('kata', 'tingkatan', 'berikutnya'));
+        return view('kamus.detail', compact('kata', 'sinonim', 'homonim', 'tingkatan', 'berikutnya'));
     }
  
     // Tautan "Selanjutnya": entri berikutnya pada hasil pencarian /cari?q=...,
@@ -69,38 +71,50 @@ class KamusController extends Controller
     }
  
     // Setiap bentuk kata yang cocok sebagai satu entri, dikelompokkan menurut huruf awal.
+    // Kata dicari di bentuk Bali (cocok sebagian) dan di arti bahasa Indonesia (makna yang sama persis).
     protected function hasilPencarian(string $search)
     {
         $tingkatanKeys = Katas::tingkatanKeys();
+        $artiDicari = Katas::daftarArti($search);
  
         $katas = Katas::query()
             ->where(function ($query) use ($tingkatanKeys, $search) {
                 foreach ($tingkatanKeys as $kolom) {
                     $query->orWhere($kolom, 'like', '%' . $search . '%');
                 }
+ 
+                $query->orWhere('bahasa_indonesia', 'like', '%' . $search . '%');
             })
             ->get();
  
         $hasil = [];
         $terlihat = [];
  
+        $tambah = function (Katas $kata, string $bentuk, string $kolom, bool $cocokArti) use (&$hasil, &$terlihat) {
+            // Satu kata bisa punya bentuk identik di beberapa tingkatan; tampilkan sekali saja.
+            $kunci = $kata->id . '|' . mb_strtolower($bentuk);
+ 
+            if (isset($terlihat[$kunci])) {
+                return;
+            }
+ 
+            $terlihat[$kunci] = true;
+            $hasil[] = ['kata' => $kata, 'bentuk' => $bentuk, 'tingkatan' => $kolom, 'cocok_arti' => $cocokArti];
+        };
+ 
         foreach ($katas as $kata) {
             foreach ($tingkatanKeys as $kolom) {
                 $bentuk = $kata->{$kolom};
  
-                if (blank($bentuk) || ! str_contains(mb_strtolower($bentuk), mb_strtolower($search))) {
-                    continue;
+                if (Katas::adaBentuk($bentuk) && str_contains(mb_strtolower($bentuk), mb_strtolower($search))) {
+                    $tambah($kata, $bentuk, $kolom, false);
                 }
+            }
  
-                // Satu kata bisa punya bentuk identik di beberapa tingkatan; tampilkan sekali saja.
-                $kunci = $kata->id . '|' . mb_strtolower($bentuk);
+            $utama = $kata->tingkatanUtama();
  
-                if (isset($terlihat[$kunci])) {
-                    continue;
-                }
- 
-                $terlihat[$kunci] = true;
-                $hasil[] = ['kata' => $kata, 'bentuk' => $bentuk, 'tingkatan' => $kolom];
+            if ($utama && array_intersect($artiDicari, Katas::daftarArti($kata->bahasa_indonesia)) !== []) {
+                $tambah($kata, $kata->{$utama}, $utama, true);
             }
         }
  
