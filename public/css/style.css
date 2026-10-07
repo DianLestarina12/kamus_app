@@ -274,6 +274,15 @@ main {
     font-weight: 800;
 }
  
+.hasil-arti {
+    font-size: 0.95rem;
+    color: #6b5a45;
+}
+ 
+.hasil-arti strong {
+    font-weight: 700;
+}
+ 
 .badge-tingkatan {
     flex-shrink: 0;
     padding: 0.3rem 1.1rem;
@@ -371,70 +380,65 @@ main {
     margin-top: 1.5rem;
 }
  
-.panel-terkait {
-    flex: 1 1 480px;
-    max-width: 640px;
-    padding: 0.9rem 1rem 1.1rem;
-    background-color: var(--user-taupe);
-    border: 1px solid #9a8a6b;
-    border-radius: 14px;
-}
- 
-.panel-terkait-judul {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    margin-bottom: 0.8rem;
-    font-size: 1.1rem;
-    font-weight: 500;
-}
- 
-.badge-terkait {
-    padding: 0.15rem 0.7rem;
-    background-color: var(--user-oranye);
-    color: var(--putih);
-    font-size: 0.7rem;
-    font-weight: 600;
-    border-radius: 6px;
-}
- 
-.panel-terkait-isi {
+.kotak-relasi-grup {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
 }
- 
-.kartu-terkait {
-    display: flex;
-    flex-direction: column;
-    gap: 0.15rem;
-    padding: 0.8rem 1rem;
-    background-color: var(--user-coklat);
-    color: var(--putih);
+
+.kotak-relasi {
+    border: 1px solid var(--user-persik-tua);
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: var(--user-persik);
+}
+
+.kotak-relasi-judul {
+    margin: 0;
+    padding: 0.6rem 1rem;
+    font-size: 1.05rem;
+    font-weight: 600;
+    background-color: #fdeed6;
+}
+
+.kotak-relasi-baris {
+    display: grid;
+    grid-template-columns: minmax(120px, 1fr) 2fr;
+    border-top: 2px solid #3b2a1f;
+    color: inherit;
     text-decoration: none;
-    border-radius: 4px;
 }
- 
-.kartu-terkait:hover {
-    background-color: var(--user-coklat-tua);
-    color: var(--putih);
+
+.kotak-relasi-baris:hover {
+    background-color: var(--user-persik-tua);
+    color: inherit;
 }
- 
-.kartu-terkait-tipe {
-    font-weight: 800;
-    letter-spacing: 0.03em;
+
+.kotak-relasi-kata {
+    padding: 0.7rem 1rem;
+    border-right: 2px solid #3b2a1f;
+    font-weight: 600;
 }
- 
-.kartu-terkait-kata {
-    font-weight: 700;
-    font-size: 0.9rem;
+
+.kotak-relasi-tingkatan {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: #7a6a55;
 }
- 
-.kartu-terkait-meta {
-    font-size: 0.68rem;
-    opacity: 0.85;
+
+.kotak-relasi-arti {
+    padding: 0.7rem 1rem;
 }
- 
+
+.kotak-relasi-kosong {
+    margin: 0;
+    padding: 0.7rem 1rem;
+    border-top: 2px solid #3b2a1f;
+    color: #7a6a55;
+}
+
 .btn-selanjutnya {
     padding: 0.6rem 2rem;
     margin-left: auto;
