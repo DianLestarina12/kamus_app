@@ -22,21 +22,25 @@ class KamusController extends Controller
     // dikelompokkan menurut huruf awal.
     public function cari(Request $request)
     {
-        $search = trim((string) $request->query('q', ''));
- 
+        // 1. Ambil parameter pencarian dari kata yang di input.
+        $search = trim((string) $request->query('q', '')); 
+
+        // 2. Jika parameter (inputan) kosong, redirect ke beranda.
         if ($search === '') {
             return redirect()->route('kamus.beranda');
         }
  
+        // 3. Ketika parameter tidak kosong, lakukan pencarian di database dengan fungsi hasilPencarian.
         $grup = $this->hasilPencarian($search);
  
+        // 4. Data hasil pencarian dikirim ke view untuk ditampilkan.
         return view('kamus.hasil', compact('grup', 'search'));
     }
  
     // Detail katas: tabel anggah-ungguh lengkap + kata terkait
     public function show(Request $request, Katas $kata)
     {
-        $sinonim = $kata->sinonimSearti();
+        $sinonim = $kata->sinonimSearti(); //fungsi untuk menampilkan kata yang memiliki arti yang sama dengan kata yang dicari.
  
         $tingkatan = $request->query('tingkatan');
  
@@ -44,7 +48,7 @@ class KamusController extends Controller
             $tingkatan = null;
         }
  
-        $homonim = $kata->homonimSebentuk($tingkatan);
+        $homonim = $kata->homonimSebentuk($tingkatan);  //fungsi untuk menampilkan kata yang memiliki bentuk yang sama dengan kata yang dicari.
  
         $berikutnya = $this->berikutnya($kata, $tingkatan, trim((string) $request->query('q', '')));
  

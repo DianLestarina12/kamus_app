@@ -29,12 +29,27 @@
                     <li class="nav-item">
                         <a class="nav-link {{ request()->routeIs('kuis.*') ? 'active' : '' }}" href="{{ route('kuis.index') }}">Kuis Evaluasi</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->routeIs('add-kuis.*') ? 'active' : '' }}" href="{{ route('kuis.index') }}">Manage Kuis Evaluasi</a>
+                    </li>
                     <li class="nav-item d-none d-lg-block"><span class="nav-pemisah"></span></li>
                     <li class="nav-item">
                         <a class="nav-link nav-admin" href="{{ route('admin.kata.index') }}">Admin</a>
                     </li>
                 </ul>
-                <a href="#" class="btn btn-masuk ms-lg-3">Masuk</a>
+                 @auth
+                <form action="{{ route('logout') }}" method="POST"
+                      class="d-inline m-0 p-0">
+                    @csrf
+                    <button type="submit" class="btn btn-keluar">
+                        Keluar
+                    </button>
+                </form>
+            @else
+                <a href="{{ route('login') }}" class="btn btn-masuk">
+                    Masuk
+                </a>
+            @endauth
             </div>
         </div>
     </nav>

@@ -15,6 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('soal');
             $table->string('jawaban');
+            $table->string('opsi1');
+            $table->string('opsi2');
+            $table->string('opsi3');
+            $table->string('opsi4');
             $table->timestamps();
         });
     }
