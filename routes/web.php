@@ -6,12 +6,21 @@ use App\Http\Controllers\Admin\KataRelasiController;
 use App\Http\Controllers\SoalController;
 use App\Http\Controllers\KamusController;
 use App\Http\Controllers\JawabanController;
+use App\Http\Controllers\KuisController;
 
 Route::get('/', [KamusController::class, 'beranda'])->name('kamus.beranda');
 Route::get('/cari', [KamusController::class, 'cari'])->name('kamus.cari');
 Route::get('/kata/{kata}', [KamusController::class, 'show'])->name('kamus.detail');
  
 Route::view('/tentang', 'tentang')->name('tentang');
+
+Route::prefix('kuis')->name('kuis.')->group(function () {
+    Route::get('/', [KuisController::class, 'index'])->name('index');
+    Route::post('/', [KuisController::class, 'mulai'])->name('mulai');
+    Route::get('/soal', [KuisController::class, 'soal'])->name('soal');
+    Route::post('/selesai', [KuisController::class, 'selesai'])->name('selesai');
+    Route::get('/hasil', [KuisController::class, 'hasil'])->name('hasil');
+});
 
 
 Route::get('/admin', function () {
