@@ -10,7 +10,7 @@ class SoalController extends Controller
     public function index()
     {
         $soals = Soals::latest()->get();
-        return view('soal.index', compact('soals'));
+        return view('kuis.soal.index', compact('soals'));
     }
     public function create()
     {

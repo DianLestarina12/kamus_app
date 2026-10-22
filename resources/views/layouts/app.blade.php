@@ -27,7 +27,7 @@
                         <span class="nav-link disabled" title="Segera hadir">Materi Belajar</span>
                     </li>
                     <li class="nav-item">
-                        <span class="nav-link disabled" title="Segera hadir">Kuis Evaluasi</span>
+                        <a class="nav-link {{ request()->routeIs('kuis.*') ? 'active' : '' }}" href="{{ route('kuis.index') }}">Kuis Evaluasi</a>
                     </li>
                     <li class="nav-item d-none d-lg-block"><span class="nav-pemisah"></span></li>
                     <li class="nav-item">

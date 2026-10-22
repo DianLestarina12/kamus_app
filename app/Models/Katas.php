@@ -101,6 +101,7 @@ class Katas extends Model
     // Sinonim berbasis arti: kata lain yang punya minimal satu makna bahasa Indonesia yang sama.
     public function sinonimSearti()
     {
+        //—-------------------- CODE IMPLEMENTASI SQL CARI SINONIM ------------------------//
         $arti = self::daftarArti($this->bahasa_indonesia);
 
         if ($arti === []) {
@@ -122,10 +123,10 @@ class Katas extends Model
 
     public function homonim(): BelongsToMany
     {
+        //CODE IMPLEMENTASI SQL CARI HOMONIM //
         return $this->relasi('homonim');
     }
  
-    // Bentuk-bentuk dalam satu kolom tingkatan, mis. "adénan, ngadénan" atau "geni/agni".
     public static function daftarBentuk(?string $nilai): array
     {
         $bagian = array_map(fn ($bentuk) => mb_strtolower(trim($bentuk)), preg_split('/[,\/]/', (string) $nilai));

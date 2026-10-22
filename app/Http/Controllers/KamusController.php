@@ -12,6 +12,11 @@ class KamusController extends Controller
     {
         return view('kamus.beranda');
     }
+
+    public function materi()
+    {
+        return view('materi.index');
+    }
  
     // Hasil pencarian: setiap bentuk kata yang cocok tampil sebagai baris tersendiri,
     // dikelompokkan menurut huruf awal.

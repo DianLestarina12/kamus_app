@@ -1,5 +1,5 @@
 <?php
- 
+/* 
 namespace App\Http\Controllers\Admin;
  
 use App\Http\Controllers\Controller;
@@ -55,4 +55,4 @@ class KataRelasiController extends Controller
  
         return back()->with('success', 'Kata terkait berhasil dihapus.');
     }
-}
+}*/

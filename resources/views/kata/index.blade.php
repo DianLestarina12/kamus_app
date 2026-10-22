@@ -115,7 +115,7 @@
                         Edit
                     </button>
 
-                        <a href="{{ route('admin.kata.relasi.index', $kata) }}" class="btn btn-outline-coklat btn-sm m-1">Relasi</a>
+                        <!--<a href="{{ route('admin.kata.relasi.index', $kata) }}" class="btn btn-outline-coklat btn-sm m-1">Relasi</a>-->
 
                            <form action="{{ route('admin.kata.destroy', $kata->id) }}" method="POST" class="d-inline">
                                 @csrf

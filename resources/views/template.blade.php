@@ -12,35 +12,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
 </head>
 <style>
-   /* .container {
-        max-width: 90%;
-        margin: 10px auto;
-        background-color: #f8f9fa;
-        padding: 20px;
-        border-radius: 5px;
-        
-    }
-   /* .spc-container-navbar {
-        max-width: 80%;
-        margin:  auto;
-        background-color: #f8f9fa;
-        padding: 20px;
-        border-radius: 5px;
-        padding-bottom: 0 !important;
-    }
-    .spc-navbar {
-        margin-left: auto;
-    }
-    .spc-btn{
-        background-color: #6E491C;
-        color: white;
-    }
-    .navbar-brand{
-        font-family: 'Libre Baskerville', serif;
-        font-size: 18px;
-        font-weight: bold;
-        color: #6E491C;
-    }*/
+    
 /*code baru*/
 
     /* Kunci wadah navbar dengan tinggi tetap dan border atas-bawah */
@@ -106,6 +78,22 @@
     margin-left: 20px;
 }
 .btn-masuk:hover {
+    background-color: #523614;
+    color: #FFFFFF;
+}
+
+/* Kustomisasi tombol Keluar */
+.btn-keluar {
+    background-color: #6E491C;
+    color: #FFFFFF;
+    font-weight: 600;
+    border-radius: 4px;
+    padding: 7px 22px !important;
+    font-size: 14.5px;
+    border: none;
+    margin-left: 20px;
+}
+.btn-keluar:hover {
     background-color: #523614;
     color: #FFFFFF;
 }
@@ -231,79 +219,80 @@
 </style>
 
 
-
 <body style="">
-<!--
-   <nav class="navbar navbar-expand-lg navbar-kamus sticky-top">
-    <div class="container">
-        <!-- <a class="navbar-brand" href="{{ route('admin.kata.index') }}">
-            <i class="bi bi-book-half"></i> Kamus App
-        </a> 
-        <a class="navbar-brand" href="#">KAMUS ANGGAH-UNGGUH <br> KRUNA BASA BALI</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarKamus">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarKamus">
-            <ul class="navbar-nav ms-lg-auto align-items-lg-center mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('admin.kata.index') ? 'active' : '' }}" href="{{ route('admin.kata.index') }}">Beranda</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('admin.kata.create') || request()->routeIs('admin.kata.store') ? 'active' : '' }}" href="{{ route('admin.kata.create') }}">Materi Belajar</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('admin.kata.import*') ? 'active' : '' }}" href="{{ route('admin.kata.import.form') }}">Kuis Evaluasi</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link">Tentang</a>
-                </li>
-                <div class="d-none d-lg-block nav-separator"></div>
-                
-                <li class="nav-item">
-                    <a class="nav-link nav-admin-active">Admin</a>
-                </li>
-            </ul>
-            <a href="#" class="btn btn-login ms-lg-3">Masuk</a>
-        </div>
-    </div>
-</nav
--->
 
-<!--CODE BARU YEAHHH-->
-<nav class="navbar navbar-kamus sticky-top">
-    <div class="container d-flex justify-content-between align-items-center">
-        
-        <!-- Bagian Kiri: Logo Teks -->
-        <a class="navbar-brand" href="#">
+<nav class="navbar navbar-expand-lg navbar-kamus sticky-top">
+    <div class="container">
+        <a class="navbar-brand" href="{{ route('kamus.beranda') }}">
             KAMUS ANGGAH-UNGGUH<br>KRUNA BASA BALI
         </a>
 
-        <!-- Bagian Kanan: Menu & Tombol -->
-        <div class="d-flex align-items-center">
-            <ul class="navbar-nav flex-row align-items-center mb-0">
+        <button class="navbar-toggler" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarTemplate"
+                aria-controls="navbarTemplate"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarTemplate">
+            <ul class="navbar-nav ms-lg-auto align-items-lg-center mb-2 mb-lg-0">
+
                 <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('admin.kata.index') ? 'active' : '' }}" href="{{ route('admin.kata.index') }}">Beranda</a>
+                    <a class="nav-link {{ request()->routeIs('kamus.beranda') ? 'active' : '' }}"
+                       href="{{ route('kamus.beranda') }}">
+                        Beranda
+                    </a>
                 </li>
+
                 <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('admin.kata.create') || request()->routeIs('admin.kata.store') ? 'active' : '' }}" href="{{ route('admin.kata.create') }}">Materi Belajar</a>
+                    <a class="nav-link {{ request()->routeIs('materi.*') ? 'active' : '' }}"
+                       href="{{ route('materi.index') }}">
+                        Materi Belajar
+                    </a>
                 </li>
+
                 <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('admin.kata.import*') ? 'active' : '' }}" href="{{ route('admin.kata.import.form') }}">Kuis Evaluasi</a>
+                    <a class="nav-link {{ request()->routeIs('kuis', 'soal.*') ? 'active' : '' }}"
+                       href="{{ route('kuis') }}">
+                        Kuis Evaluasi
+                    </a>
                 </li>
-                
-                <!-- Garis Pemisah | -->
-                <li class="nav-item d-flex align-items-center">
-                    <div class="nav-separator"></div>
-                </li>
-                
+
                 <li class="nav-item">
-                    <a class="nav-link nav-admin-active" href="#">Admin</a>
+                    <a class="nav-link {{ request()->routeIs('tentang') ? 'active' : '' }}"
+                       href="{{ route('tentang') }}">
+                        Tentang
+                    </a>
+                </li>
+
+                <li class="nav-item d-none d-lg-flex align-items-center">
+                    <span class="nav-separator"></span>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link nav-admin {{ request()->routeIs('admin.*') ? 'active' : '' }}"
+                       href="{{ route('admin.kata.index') }}">
+                        Admin
+                    </a>
                 </li>
             </ul>
-            
-            <a href="#" class="btn btn-masuk">Masuk</a>
+
+            @auth
+                <form action="{{ route('logout') }}" method="POST"
+                      class="d-inline m-0 p-0">
+                    @csrf
+                    <button type="submit" class="btn btn-keluar">
+                        Keluar
+                    </button>
+                </form>
+            @else
+                <a href="{{ route('login') }}" class="btn btn-masuk">
+                    Masuk
+                </a>
+            @endauth
         </div>
-        
     </div>
 </nav>
 
