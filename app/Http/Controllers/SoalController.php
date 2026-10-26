@@ -17,16 +17,8 @@ class SoalController extends Controller
         return view('kuis.soal.create');
     }
     public function store(Request $request)
-    {$request->validate([
-            'soal' => 'required',
-            'jawaban' => 'required',
-            'opsi1' => 'required',
-            'opsi2' => 'required',
-            'opsi3' => 'required',
-            'opsi4' => 'required',
-        ]);
-
-        Soals::create($request->all());
+    {
+        Soals::create($this->validasi($request));
 
         return redirect()->route('soal.index')
                         ->with('success','Soal created successfully.');
@@ -41,17 +33,8 @@ class SoalController extends Controller
 
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'soal' => 'required',
-            'jawaban' => 'required',
-            'opsi1' => 'required',
-            'opsi2' => 'required',
-            'opsi3' => 'required',
-            'opsi4' => 'required',
-        ]);
-
         $soal = Soals::findOrFail($id);
-        $soal->update($request->all());
+        $soal->update($this->validasi($request));
 
         return redirect()->route('soal.index')
                         ->with('success','Soal updated successfully.');
@@ -64,5 +47,28 @@ class SoalController extends Controller
 
         return redirect()->route('soal.index')
                         ->with('success','Soal deleted successfully.');
+    }
+
+    // Jawaban harus salah satu dari keempat opsi, supaya kunci jawaban selalu ada di pilihan.
+    private function validasi(Request $request): array
+    {
+        return $request->validate([
+            'soal' => 'required|string',
+            'opsi1' => 'required|string',
+            'opsi2' => 'required|string',
+            'opsi3' => 'required|string',
+            'opsi4' => 'required|string',
+            'jawaban' => [
+                'required',
+                'string',
+                function (string $attribute, mixed $value, \Closure $fail) use ($request) {
+                    $opsi = [$request->input('opsi1'), $request->input('opsi2'), $request->input('opsi3'), $request->input('opsi4')];
+
+                    if (! in_array($value, $opsi, true)) {
+                        $fail('Jawaban harus sama dengan salah satu opsi.');
+                    }
+                },
+            ],
+        ]);
     }
 }

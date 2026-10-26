@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Models\Katas;
+use App\Models\Soals;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -10,16 +10,17 @@ class KuisTest extends TestCase
 {
     use RefreshDatabase;
 
-    private function isiKata(int $jumlah): void
+    private function isiSoal(int $jumlah): void
     {
-        $tingkatan = ['kruna_asi', 'kruna_aso', 'kruna_ami', 'kruna_mider', 'kruna_andap', 'kruna_kasar'];
-
         for ($i = 0; $i < $jumlah; $i++) {
-            $kolom = $tingkatan[$i % count($tingkatan)];
-            $data = array_fill_keys($tingkatan, '-');
-            $data[$kolom] = "kata{$i}";
-            $data['bahasa_indonesia'] = "arti{$i}";
-            Katas::create($data);
+            Soals::create([
+                'soal' => "Pertanyaan {$i}?",
+                'jawaban' => "Pilihan {$i} benar",
+                'opsi1' => "Pilihan {$i} salah 1",
+                'opsi2' => "Pilihan {$i} benar",
+                'opsi3' => "Pilihan {$i} salah 2",
+                'opsi4' => "Pilihan {$i} salah 3",
+            ]);
         }
     }
 
@@ -31,12 +32,12 @@ class KuisTest extends TestCase
     public function test_tanpa_data_kata_kembali_ke_pembuka_dengan_pesan(): void
     {
         $this->post('/kuis')->assertRedirect(route('kuis.index'));
-        $this->get('/kuis')->assertSee('Belum ada kata yang bisa dijadikan soal kuis.');
+        $this->get('/kuis')->assertSee('Belum ada soal kuis. Tambahkan soal terlebih dahulu.');
     }
 
     public function test_soal_dibuat_dengan_empat_pilihan_dan_kunci_tidak_ada_di_halaman(): void
     {
-        $this->isiKata(20);
+        $this->isiSoal(20);
 
         $this->post('/kuis')->assertRedirect(route('kuis.soal'));
 
@@ -46,21 +47,40 @@ class KuisTest extends TestCase
         $this->assertSame(40, substr_count($html, 'class="kuis-pilihan"'));
     }
 
+    public function test_soal_diambil_dari_daftar_soal_yang_sudah_dibuat(): void
+    {
+        Soals::create([
+            'soal' => 'Kruna apa yang sama sekali tidak memiliki bentuk lain?',
+            'jawaban' => 'Kruna Mider',
+            'opsi1' => 'Kruna Mider',
+            'opsi2' => 'Kruna Andap',
+            'opsi3' => 'Kruna Kasar',
+            'opsi4' => 'Kruna Alus Sor (ASO)',
+        ]);
+
+        $this->post('/kuis')->assertRedirect(route('kuis.soal'));
+
+        $this->get('/kuis/soal')
+            ->assertOk()
+            ->assertSee('Kruna apa yang sama sekali tidak memiliki bentuk lain?')
+            ->assertSee('Kruna Alus Sor (ASO)');
+    }
+
     public function test_skor_dihitung_di_server(): void
     {
-        $this->isiKata(20);
+        $this->isiSoal(20);
         $this->post('/kuis');
 
         $soal = session('kuis');
         $this->assertCount(10, $soal);
 
-        // 7 benar, 3 salah (satu tidak dijawab).
+        // 7 benar, 2 salah, 1 tidak dijawab.
         $jawaban = [];
         foreach ($soal as $nomor => $item) {
             if ($nomor < 7) {
                 $jawaban[$nomor] = $item['benar'];
             } elseif ($nomor < 9) {
-                $jawaban[$nomor] = collect(['kruna_asi', 'kruna_aso', 'kruna_ami', 'kruna_mider', 'kruna_andap', 'kruna_kasar'])
+                $jawaban[$nomor] = collect(['opsi1', 'opsi2', 'opsi3', 'opsi4'])
                     ->first(fn ($k) => $k !== $item['benar']);
             }
         }

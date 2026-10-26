@@ -49,15 +49,18 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 
 });
 
-Route::get('/soal', [SoalController::class, 'index'])->name('soal.index');
-Route::get('/soal/create', [SoalController::class, 'create'])->name('soal.create');
-Route::post('/soal', [SoalController::class, 'store'])->name('soal.store');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/soal', [SoalController::class, 'index'])->name('soal.index');
+    Route::get('/soal/create', [SoalController::class, 'create'])->name('soal.create');
+    Route::post('/soal', [SoalController::class, 'store'])->name('soal.store');
+    Route::get('/soal/{id}/edit', [SoalController::class, 'edit'])->name('soal.edit');
+    Route::put('/soal/{id}', [SoalController::class, 'update'])->name('soal.update');
+    Route::delete('/soal/{id}', [SoalController::class, 'destroy'])->name('soal.destroy');
+});
+
 Route::get('/jawaban', [JawabanController::class, 'index'])->name('jawaban.index');
 Route::get('/jawaban/create', [JawabanController::class, 'create'])->name('jawaban.create');
 Route::post('/jawaban', [JawabanController::class, 'store'])->name('jawaban.store');
-Route::get('/soal/{id}/edit', [SoalController::class, 'edit'])->name('soal.edit');
-Route::post('/soal/{id}', [SoalController::class, 'update'])->name('soal.update');
-Route::delete('/soal/{id}', [SoalController::class, 'destroy'])->name('soal.destroy');
 
 Route::get('/login', [AuthController::class, 'index'])->name('login');
 Route::post('/login/proses', [AuthController::class, 'proses'])->name('login.proses');

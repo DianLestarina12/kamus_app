@@ -12,7 +12,7 @@
                     <p class="kuis-nomor">Soal {{ $nomor + 1 }} dari {{ count($soal) }}</p>
 
                     <h2 class="kuis-pertanyaan">
-                        Kata "{{ $item['bentuk'] }}" dalam bahasa Bali termasuk dalam anggah-ungguh kruna apa?
+                        {{ $item['pertanyaan'] }}
                     </h2>
 
                     <div class="kuis-pilihan-daftar">

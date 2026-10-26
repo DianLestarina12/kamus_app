@@ -1,13 +1,11 @@
 @extends('template')
 @section('content')
+    <h4 class="mt-3 mb-4">Edit Soal</h4>
     <form action="{{ route('soal.update', $soal->id) }}" method="POST">
         @csrf
-        <input type="text" name="soal" placeholder="Masukkan Soal" value="{{ $soal->soal }}">
-        <input type="text" name="jawaban" placeholder="Masukkan Jawaban" value="{{ $soal->jawaban }}">
-        <input type="text" name="opsi1" placeholder="Masukkan Opsi" value="{{ $soal->opsi1 }}">
-        <input type="text" name="opsi2" placeholder="Masukkan Opsi" value="{{ $soal->opsi2 }}">
-        <input type="text" name="opsi3" placeholder="Masukkan Opsi" value="{{ $soal->opsi3 }}">
-        <input type="text" name="opsi4" placeholder="Masukkan Opsi" value="{{ $soal->opsi4 }}">
-        <button type="submit">Submit</button> 
+        @method('PUT')
+        @include('kuis.soal._form')
+        <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+        <a href="{{ route('soal.index') }}" class="btn btn-secondary">Kembali</a>
     </form>
 @endsection
