@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Katas;
+use App\Models\Soals;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 
 class KuisController extends Controller
 {
     public const JUMLAH_SOAL = 10;
-    public const JUMLAH_PILIHAN = 4;
+
+    // Kolom opsi pada tabel soals; jawaban benar selalu sama dengan salah satunya.
+    private const KUNCI_OPSI = ['opsi1', 'opsi2', 'opsi3', 'opsi4'];
 
     // Pembuka: ajakan mengerjakan kuis.
     public function index()
@@ -24,7 +26,7 @@ class KuisController extends Controller
 
         if ($soal->isEmpty()) {
             return redirect()->route('kuis.index')
-                ->with('error', 'Belum ada kata yang bisa dijadikan soal kuis.');
+                ->with('error', 'Belum ada soal kuis. Tambahkan soal terlebih dahulu.');
         }
 
         session(['kuis' => $soal->all()]);
@@ -88,45 +90,27 @@ class KuisController extends Controller
 
     private function buatSoal(): Collection
     {
-        return Katas::query()
-            ->get()
-            ->map(fn (Katas $kata) => ['kata' => $kata, 'kolom' => $this->tingkatanTunggal($kata)])
-            ->filter(fn (array $item) => $item['kolom'] !== null)
-            ->shuffle()
-            ->unique(fn (array $item) => $item['kata']->{$item['kolom']})
+        return Soals::query()
+            ->inRandomOrder()
             ->take(self::JUMLAH_SOAL)
-            ->map(fn (array $item) => $this->buatItem($item['kata'], $item['kolom']))
+            ->get()
+            ->map(fn (Soals $soal) => $this->buatItem($soal))
             ->values();
     }
 
-    // Hanya kata yang punya tepat satu tingkatan yang dipakai, supaya jawabannya tidak ambigu.
-    private function tingkatanTunggal(Katas $kata): ?string
+    private function buatItem(Soals $soal): array
     {
-        $terisi = array_values(array_filter(
-            Katas::tingkatanKeys(),
-            fn (string $kolom) => Katas::adaBentuk($kata->{$kolom})
-        ));
+        $benar = collect(self::KUNCI_OPSI)->first(fn (string $kunci) => $soal->{$kunci} === $soal->jawaban);
 
-        return count($terisi) === 1 ? $terisi[0] : null;
-    }
-
-    private function buatItem(Katas $kata, string $kolom): array
-    {
-        $pengecoh = collect(Katas::tingkatanKeys())
-            ->reject(fn (string $key) => $key === $kolom)
+        $pilihan = collect(self::KUNCI_OPSI)
+            ->map(fn (string $kunci) => ['kunci' => $kunci, 'label' => $soal->{$kunci}])
             ->shuffle()
-            ->take(self::JUMLAH_PILIHAN - 1);
-
-        $pilihan = $pengecoh
-            ->push($kolom)
-            ->shuffle()
-            ->map(fn (string $key) => ['kunci' => $key, 'label' => Katas::tingkatanLabel($key)])
             ->values()
             ->all();
 
         return [
-            'bentuk' => $kata->{$kolom},
-            'benar' => $kolom,
+            'pertanyaan' => $soal->soal,
+            'benar' => $benar,
             'pilihan' => $pilihan,
         ];
     }

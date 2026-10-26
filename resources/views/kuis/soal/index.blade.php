@@ -1,6 +1,9 @@
 @extends('template')
 @section('content')
     <div class="">
+        @if (session('success'))
+            <div class="alert alert-success">{{ session('success') }}</div>
+        @endif
         <a class="btn" href="{{ route('soal.create') }}"> <div class="btn"> Add New Soal</div></a>
         <table class="table">
             <thead>
@@ -32,6 +35,7 @@
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus soal ini?')">Hapus</button>
                             </form>
+                        </td>
                     </tr>
                 @endforeach
             </tbody>
