@@ -4,7 +4,9 @@
     <h3><em>Kruna Alus Mider</em> (AMI)</h3>
     
     <p>
-        <em>Kruna alus mider</em> adalah kata bahasa Bali yang mempunyai nilai rasa halus, dan mempunyai dua fungsi, bisa dipakai menghormat (<em>nyinggihang sang singgih</em>) dan juga dipakai merendahkan golongan bawah (<em>ngesorang sang sor</em>). Selain itu, <em>kruna alus mider</em> pasti mempunyai bentuk biasa (<em>andap</em>) (Suasta, 1997: 26). Kata-kata yang tercetak tebal di bawah, sebagai contoh <em>kruna alus mider</em> (Ami).
+        <em>Kruna alus mider</em> adalah kata bahasa Bali yang mempunyai nilai rasa halus, dan mempunyai dua fungsi, bisa dipakai menghormat (<em>nyinggihang sang singgih</em>) dan juga dipakai merendahkan golongan bawah (<em>ngesorang sang sor</em>). 
+        Selain itu, <em>kruna alus mider</em> pasti mempunyai bentuk biasa (<em>andap</em>) (Suasta, 1997: 26). 
+        Kata-kata yang tercetak tebal di bawah, sebagai contoh <em>kruna alus mider</em> (Ami).
     </p>
 
     <ol>
@@ -19,7 +21,9 @@
     </ol>
 
     <p>
-        Di dalam kalimat (1) dan (2) di atas, sudah pasti ada empat kata/<em>kruna</em> yang mempunyai nilai rasa <em>alus mider</em> yaitu: <em>kruna</em> <strong>sampun</strong>, <em>kruna</em> <strong>rauh</strong>, <em>kruna</em> <strong>saking</strong>, dan <em>kruna</em> <strong>Jawi</strong>. Yang menyebabkan keempat kata tersebut disebut <em>kruna alus mider</em> karena dipakai di dalam kalimat <em>Asi</em> (seperti pada kalimat no.1), juga dapat dipakai dalam kalimat <em>Aso</em> (seperti pada no. 2). Di samping itu, keempat kata <em>Ami</em> tersebut mempunyai bentuk <em>andap</em>. Kata <strong>rauh</strong> <em>andapnya</em> <strong>teka</strong>; kata <strong>sampun</strong> <em>andapnya</em> <strong>suba</strong>, kata <strong>saking</strong> <em>andapnya</em> <strong>uli</strong>; dan kata <strong>Jawi</strong> <em>andapnya</em> <strong>Jawa</strong>. Hal itulah yang menyebabkan keempat kata tersebut termasuk kata atau <em>kruna alus mider</em>. Contoh <em>kruna alus mider</em> lainnya: <em>uning</em> 'tahu', <em>lali</em> 'lupa', <em>eling</em> "ingat", <em>sampun</em> 'sudah', <em>ngambil</em> 'mengambil'.
+        Di dalam kalimat (1) dan (2) di atas, sudah pasti ada empat kata/<em>kruna</em> yang mempunyai nilai rasa <em>alus mider</em> yaitu: 
+        <em>kruna</em> <strong>sampun</strong>, <em>kruna</em> <strong>rauh</strong>, <em>kruna</em> <strong>saking</strong>, dan <em>kruna</em> <strong>Jawi</strong>. 
+        Yang menyebabkan keempat kata tersebut disebut <em>kruna alus mider</em> karena dipakai di dalam kalimat <em>Asi</em> (seperti pada kalimat no.1), juga dapat dipakai dalam kalimat <em>Aso</em> (seperti pada no. 2). Di samping itu, keempat kata <em>Ami</em> tersebut mempunyai bentuk <em>andap</em>. Kata <strong>rauh</strong> <em>andapnya</em> <strong>teka</strong>; kata <strong>sampun</strong> <em>andapnya</em> <strong>suba</strong>, kata <strong>saking</strong> <em>andapnya</em> <strong>uli</strong>; dan kata <strong>Jawi</strong> <em>andapnya</em> <strong>Jawa</strong>. Hal itulah yang menyebabkan keempat kata tersebut termasuk kata atau <em>kruna alus mider</em>. Contoh <em>kruna alus mider</em> lainnya: <em>uning</em> 'tahu', <em>lali</em> 'lupa', <em>eling</em> "ingat", <em>sampun</em> 'sudah', <em>ngambil</em> 'mengambil'.
     </p>
 
     <p>Contoh <em>kruna alus mider</em> (Ami) berbentuk kalimat:</p>
@@ -85,7 +89,7 @@
         Jadi di sini kelihatan bahwa sebuah kata yang termasuk jenis alus mider dapat digunakan dalam berbagai tataran dalam bahasa alus, baik untuk menyebut keadaan orang golongan atas maupun orang golongan bawah.
     </p>
 
-    <p class="mt-4 mb-2"><strong>Tabel 2.1 Contoh <em>Kruna Alus Mider</em> Lainnya</strong></p>
+    <p class="mt-4 mb-2"><strong>Tabel Contoh <em>Kruna Alus Mider</em> Lainnya</strong></p>
     
     <div class="table-responsive mb-4">
         <table class="table table-bordered border-dark text-center align-middle">

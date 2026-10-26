@@ -24,13 +24,20 @@
                         <a class="nav-link {{ request()->routeIs('kamus.*') ? 'active' : '' }}" href="{{ route('kamus.beranda') }}">Beranda</a>
                     </li>
                     <li class="nav-item">
-                        <span class="nav-link disabled" title="Segera hadir">Materi Belajar</span>
+                        <a class="nav-link {{ request()->routeIs('materi.*') ? 'active' : '' }}" href="{{ route('materi.index') }}">Materi Belajar</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {{ request()->routeIs('kuis.*') ? 'active' : '' }}" href="{{ route('kuis.index') }}">Kuis Evaluasi</a>
                     </li>
+                    <!-- 
                     <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('add-kuis.*') ? 'active' : '' }}" href="{{ route('kuis.index') }}">Manage Kuis Evaluasi</a>
+                        <a class="nav-link {{ request()->routeIs('add-kuis.*') ? 'active' : '' }}" href="{{ route('soal.index') }}">Manage Kuis Evaluasi</a>
+                    </li> -->
+                    <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('tentang') ? 'active' : '' }}"
+                       href="{{ route('tentang') }}">
+                        Tentang
+                    </a>
                     </li>
                     <li class="nav-item d-none d-lg-block"><span class="nav-pemisah"></span></li>
                     <li class="nav-item">

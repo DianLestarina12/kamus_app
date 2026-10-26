@@ -4,7 +4,10 @@
     <h3><em>Kruna Alus Madia</em> (AMA)</h3>
     
     <p>
-        <em>Kruna alus madia</em> (AMA) adalah kata-kata yang bahasanya berada di antara <em>alus singgih</em> (Asi) dan <em>alus sor</em> (Aso). Kruna <em>alus madia</em> kelihatan sebagai variasi <em>kruna alus</em> lainnya (Bagus, 1979: 179). Selain itu, memang ada kata-kata bahasa Bali yang rasa bahasanya <em>alus madia</em>, <em>alus yang menengah</em>, atau kurang baik kalau dipakai berbahasa alus. Perhatikan contoh kalimat di bawah ini!
+        <em>Kruna alus madia</em> (AMA) adalah kata-kata yang bahasanya berada di antara <em>alus singgih</em> (Asi) dan <em>alus sor</em> (Aso). 
+        Kruna <em>alus madia</em> kelihatan sebagai variasi <em>kruna alus</em> lainnya (Bagus, 1979: 179). 
+        Selain itu, memang ada kata-kata bahasa Bali yang rasa bahasanya <em>alus madia</em>, <em>alus yang menengah</em>, atau kurang baik kalau dipakai berbahasa alus. 
+        Perhatikan contoh kalimat di bawah ini!
     </p>
 
     <ol type="a" style="padding-left: 20px;">
@@ -38,7 +41,7 @@
         Perhatikan contoh kata-kata berikut. Jika kata-kata ini dipakai berbicara, pembicaraan tersebut akan menjadi <strong>basa madia</strong> (bahasa yang halus menengah).
     </p>
 
-    <p class="mt-4 mb-2"><strong>Tabel 2.2 Contoh <em>Kruna Alus Madia</em> Lainnya</strong></p>
+    <p class="mt-4 mb-2"><strong>Tabel Contoh <em>Kruna Alus Madia</em> Lainnya</strong></p>
     
     <div class="table-responsive mb-4">
         <table class="table table-bordered border-dark text-center align-middle">

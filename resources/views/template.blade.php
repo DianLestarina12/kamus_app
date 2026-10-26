@@ -257,9 +257,10 @@
                     <a class="nav-link {{ request()->routeIs('kuis.*') ? 'active' : '' }}" href="{{ route('kuis.index') }}">Kuis Evaluasi</a>
                 </li>
 
-                 <li class="nav-item">
+                 <!-- 
+                <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('add-kuis.*') ? 'active' : '' }}" href="{{ route('soal.index') }}">Manage Kuis Evaluasi</a>
-                </li>
+                </li> -->
 
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('tentang') ? 'active' : '' }}"
